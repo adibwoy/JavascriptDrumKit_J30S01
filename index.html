@@ -57,7 +57,47 @@
 <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-    
+    //Initialize Data
+    let keys = [];
+    let audioTags = document.querySelectorAll("audio[data-key]");
+    let keyTags = document.querySelectorAll(".key[data-key");
+    let visualKeys = [];
+
+    //Populate Keys
+    audioTags.forEach(tag => {
+        keys.push(+tag.dataset.key);
+    });
+
+    //Arrange Key Tags
+    keyTags.forEach(keyTag => {
+        let keyIndex = keys.indexOf(+keyTag.dataset.key);
+        if (keyIndex > -1) {
+           visualKeys[keyIndex] = keyTag;
+        }
+    });
+
+    //Add Event Listeners
+    document.addEventListener("keydown", keyPressed);
+
+    keyTags.forEach(keyTag => {
+        keyTag.addEventListener("transitionend", transitionEnd);
+    });
+
+    //Configure Event Handlers
+    function keyPressed(e) {
+        let keyIndex = keys.indexOf(+e.keyCode);
+        if (keyIndex > -1) {
+            let audioTag = audioTags.item(keyIndex);
+            audioTag.currentTime = 0;
+            audioTag.play();
+            visualKeys[keyIndex].classList.add("playing");
+        }
+    }
+
+    function transitionEnd(e) {
+        if (e.propertyName !== "transform") return;
+        this.classList.remove("playing");
+    }
 
 </script>
 
